@@ -114,3 +114,17 @@ Started: Initial setup
   - Color persisted in localStorage under `invoiceData.accentColor`
   - Note: Color is stored but not yet applied to preview/PDF - that's US-009
 ---
+
+## 2026-01-11 - US-009
+- Implemented applying custom accent color to preview and PDF
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Preview uses CSS custom property `--accent-color` set via `previewEl.style.setProperty()` in `renderPreview()`
+  - CSS uses fallback syntax: `color: var(--accent-color, var(--primary))` for graceful degradation
+  - Updated 6 CSS rules to use accent color: `.invoice-title`, `.totals-table .row.total .amount`, `.invoice-footer a`, and Modern Dark variants
+  - Modern Dark template header border also uses accent color
+  - PDF uses inline `hexToRgb()` helper function to convert hex color to RGB array
+  - PDF `primaryLight` is calculated dynamically: `primary.map(c => Math.min(255, c + 40))`
+  - Only applies custom color if `isPro && accentColor` is truthy, otherwise uses default `#6366f1`
+  - Color works across all templates - Classic uses accent directly, Modern Dark uses for border/totals, Minimal doesn't show much color anyway
+---

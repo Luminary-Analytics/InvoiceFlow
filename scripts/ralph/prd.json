@@ -148,7 +148,7 @@
         "Verify in browser"
       ],
       "priority": 9,
-      "passes": false,
+      "passes": true,
       "notes": "Update CSS variables dynamically for preview, pass color to PDF generation."
     }
   ]
