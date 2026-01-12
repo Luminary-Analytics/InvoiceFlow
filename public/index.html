@@ -493,6 +493,18 @@
             margin-bottom: 1.5rem;
         }
 
+        .invoice-header-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .invoice-logo {
+            max-width: 150px;
+            max-height: 60px;
+            object-fit: contain;
+        }
+
         .invoice-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -1878,11 +1890,17 @@
                 previewEl.classList.add('template-minimal');
             }
 
+            // Build logo HTML only if logo exists
+            const logoHtml = logoDataUrl ? `<img src="${logoDataUrl}" alt="Business logo" class="invoice-logo">` : '';
+
             previewEl.innerHTML = `
                 <div class="invoice-header">
-                    <div>
-                        <div class="invoice-title">INVOICE</div>
-                        <div class="invoice-number">${escapeHtml(document.getElementById('invoiceNumber').value) || 'INV-001'}</div>
+                    <div class="invoice-header-left">
+                        ${logoHtml}
+                        <div>
+                            <div class="invoice-title">INVOICE</div>
+                            <div class="invoice-number">${escapeHtml(document.getElementById('invoiceNumber').value) || 'INV-001'}</div>
+                        </div>
                     </div>
                     <div class="invoice-dates">
                         <p><strong>Date:</strong> ${formatDate(document.getElementById('invoiceDate').value)}</p>
@@ -2033,6 +2051,7 @@
             const pageHeight = doc.internal.pageSize.getHeight();
             const margin = 20;
             let y = 20;
+            let titleStartX = margin; // Will be adjusted if logo exists
 
             // Color schemes for different templates
             const isModernDark = currentTemplate === 'modern';
@@ -2086,17 +2105,55 @@
                 doc.rect(0, 35, pageWidth, 1.5, 'F');
             }
 
+            // Add logo if exists
+            if (logoDataUrl && isPro) {
+                try {
+                    // Get image dimensions to maintain aspect ratio
+                    const img = new Image();
+                    img.src = logoDataUrl;
+                    await new Promise((resolve) => {
+                        if (img.complete) {
+                            resolve();
+                        } else {
+                            img.onload = resolve;
+                            img.onerror = resolve;
+                        }
+                    });
+
+                    // Calculate logo dimensions (max 35mm width, max 15mm height)
+                    const maxWidth = 35;
+                    const maxHeight = 15;
+                    let logoWidth = maxWidth;
+                    let logoHeight = (img.height / img.width) * logoWidth;
+
+                    if (logoHeight > maxHeight) {
+                        logoHeight = maxHeight;
+                        logoWidth = (img.width / img.height) * logoHeight;
+                    }
+
+                    // Add the logo
+                    const imgFormat = logoDataUrl.includes('image/png') ? 'PNG' : 'JPEG';
+                    doc.addImage(logoDataUrl, imgFormat, margin, y - 5, logoWidth, logoHeight);
+
+                    // Adjust title position to be after logo
+                    titleStartX = margin + logoWidth + 5;
+                } catch (e) {
+                    // If logo fails to load, continue without it
+                    console.error('Failed to add logo to PDF:', e);
+                }
+            }
+
             // Title
             doc.setFontSize(isMinimal ? 22 : 28);
             doc.setTextColor(...(isModernDark ? dark : (isMinimal ? dark : primary)));
             doc.setFont('helvetica', isMinimal ? 'normal' : 'bold');
-            doc.text('INVOICE', margin, y);
+            doc.text('INVOICE', titleStartX, y);
 
             y += 8;
             doc.setFontSize(11);
             doc.setTextColor(...(isModernDark ? light : (isMinimal ? light : medium)));
             doc.setFont('helvetica', 'normal');
-            doc.text(document.getElementById('invoiceNumber').value || 'INV-001', margin, y);
+            doc.text(document.getElementById('invoiceNumber').value || 'INV-001', titleStartX, y);
 
             // Dates
             doc.setFontSize(10);
