@@ -508,7 +508,7 @@
         .invoice-title {
             font-size: 1.75rem;
             font-weight: 700;
-            color: var(--primary);
+            color: var(--accent-color, var(--primary));
             margin-bottom: 0.25rem;
         }
 
@@ -612,7 +612,7 @@
         }
 
         .totals-table .row.total .amount {
-            color: var(--primary);
+            color: var(--accent-color, var(--primary));
         }
 
         /* Invoice Notes */
@@ -646,7 +646,7 @@
         }
 
         .invoice-footer a {
-            color: var(--primary);
+            color: var(--accent-color, var(--primary));
             text-decoration: none;
         }
 
@@ -961,7 +961,7 @@
             background: var(--gray-800);
             padding: 1.5rem;
             margin: -1.5rem -1.5rem 1.5rem -1.5rem;
-            border-bottom: 3px solid var(--primary);
+            border-bottom: 3px solid var(--accent-color, var(--primary));
         }
 
         .invoice-preview.template-modern-dark .invoice-title {
@@ -1016,7 +1016,7 @@
         }
 
         .invoice-preview.template-modern-dark .totals-table .row.total .amount {
-            color: var(--primary-light);
+            color: var(--accent-color, var(--primary-light));
         }
 
         .invoice-preview.template-modern-dark .invoice-notes {
@@ -1037,7 +1037,7 @@
         }
 
         .invoice-preview.template-modern-dark .invoice-footer a {
-            color: var(--primary-light);
+            color: var(--accent-color, var(--primary-light));
         }
 
         /* Minimal Template */
@@ -2063,6 +2063,13 @@
                 previewEl.classList.add('template-minimal');
             }
 
+            // Apply custom accent color (Pro feature)
+            if (isPro && accentColor) {
+                previewEl.style.setProperty('--accent-color', accentColor);
+            } else {
+                previewEl.style.setProperty('--accent-color', '#6366f1');
+            }
+
             // Build logo HTML only if logo exists
             const logoHtml = logoDataUrl ? `<img src="${logoDataUrl}" alt="Business logo" class="invoice-logo">` : '';
 
@@ -2242,8 +2249,21 @@
             // Color schemes for different templates
             const isModernDark = currentTemplate === 'modern';
             const isMinimal = currentTemplate === 'minimal';
-            const primary = [99, 102, 241];
-            const primaryLight = [129, 140, 248];
+
+            // Convert accent color from hex to RGB
+            const hexToRgb = (hex) => {
+                const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? [
+                    parseInt(result[1], 16),
+                    parseInt(result[2], 16),
+                    parseInt(result[3], 16)
+                ] : [99, 102, 241]; // Default to primary if parsing fails
+            };
+
+            // Use custom accent color if Pro user, otherwise default primary
+            const primary = isPro && accentColor ? hexToRgb(accentColor) : [99, 102, 241];
+            // Calculate lighter version for dark backgrounds
+            const primaryLight = primary.map(c => Math.min(255, c + 40));
 
             // Template-specific colors
             let dark, medium, light, bgColor, headerBg, tableHeaderBg, tableRowAltBg, dividerColor;
