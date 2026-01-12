@@ -1233,6 +1233,14 @@
     </div>
 
     <script>
+        // ============================================
+        // CONFIGURATION - Update these Stripe links
+        // ============================================
+        const STRIPE_CONFIG = {
+            monthlyPaymentLink: 'https://buy.stripe.com/PLACEHOLDER_MONTHLY',
+            yearlyPaymentLink: 'https://buy.stripe.com/PLACEHOLDER_YEARLY'
+        };
+
         // State
         let lineItems = [];
         let saveTimeout = null;
@@ -1248,8 +1256,28 @@
             setDefaultDates();
             setupAutoSave();
             renderPreview();
+            handleProUrlParams();
             checkProStatus();
         });
+
+        // Handle ?pro=success and ?pro=cancel URL parameters
+        function handleProUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const proParam = urlParams.get('pro');
+
+            if (proParam === 'success') {
+                // Activate Pro status
+                localStorage.setItem('invoiceflow_pro', 'true');
+                isPro = true;
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } else if (proParam === 'cancel') {
+                // Show cancellation message
+                alert('Payment cancelled. You can upgrade to Pro anytime.');
+                // Clean up the URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
 
         // Pro status (would connect to payment system)
         function checkProStatus() {
@@ -1293,10 +1321,12 @@
         }
 
         function checkout() {
-            // This would integrate with Stripe Checkout
-            // For now, show a message
-            alert('Payment integration coming soon! For now, enjoy the free version.');
-            closeProModal();
+            // Redirect to Stripe Payment Link based on selected pricing
+            const paymentLink = currentPricing === 'yearly'
+                ? STRIPE_CONFIG.yearlyPaymentLink
+                : STRIPE_CONFIG.monthlyPaymentLink;
+
+            window.location.href = paymentLink;
         }
 
         // Template selection
