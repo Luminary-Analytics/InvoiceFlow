@@ -47,3 +47,15 @@ Started: Initial setup
   - `selectTemplate()` gates Pro templates with isPro check before allowing selection
   - Free users see PRO badge via CSS `.template-option.pro::after` pseudo-element
 ---
+
+## 2026-01-11 - US-004
+- Implemented Minimal template for Pro users
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Minimal template uses `.template-minimal` CSS class following same pattern as Modern Dark
+  - Key styling: thin `1px solid` lines, `font-weight: 300-400`, subtle gray palette
+  - PDF uses `isMinimal = currentTemplate === 'minimal'` for conditional formatting
+  - PDF Minimal differences: no filled backgrounds for table headers, lowercase column labels, no bold fonts
+  - Preview template class logic already wired up from US-003 (`renderPreview()` line ~1654)
+  - Pro template gating handled centrally in `selectTemplate()` via `isProTemplate` check
+---

@@ -65,7 +65,7 @@
         "Verify in browser"
       ],
       "priority": 4,
-      "passes": false,
+      "passes": true,
       "notes": "Minimal should feel elegant and understated."
     },
     {
