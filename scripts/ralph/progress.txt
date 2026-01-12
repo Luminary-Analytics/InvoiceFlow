@@ -22,3 +22,13 @@ Started: Initial setup
   - URL parameters are handled at page load in `handleProUrlParams()`
   - The `checkout()` function redirects to Stripe Payment Links, no need for Stripe SDK
 ---
+
+## 2026-01-11 - US-002
+- Verified watermark removal for Pro users (already implemented)
+- Files changed: None (verification only)
+- **Learnings for future iterations:**
+  - Preview watermark logic is in `renderPreview()` function (line ~1440): uses ternary `isPro ? '' : '<div class="invoice-footer">...'`
+  - PDF watermark logic is in `downloadPDF()` function (line ~1713): `if (!isPro)` check before adding watermark
+  - Both conditionally hide watermark based on global `isPro` variable
+  - No code changes needed - the watermark removal feature was implemented alongside US-001
+---

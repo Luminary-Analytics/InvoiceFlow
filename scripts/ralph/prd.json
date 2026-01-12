@@ -31,7 +31,7 @@
         "Verify in browser"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": "Check if this is already implemented - may just need verification and bug fixes."
     },
     {
