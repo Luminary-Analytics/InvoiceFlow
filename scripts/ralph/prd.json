@@ -100,7 +100,7 @@
         "Verify in browser"
       ],
       "priority": 6,
-      "passes": false,
+      "passes": true,
       "notes": "Store as base64 to keep serverless. Size limit prevents localStorage bloat."
     },
     {

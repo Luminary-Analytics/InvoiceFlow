@@ -70,3 +70,17 @@ Started: Initial setup
   - Pro template restoration checks `isPro` - if user lost Pro status, they're reset to classic template
   - `selectTemplate()` handles: Pro gating, state update, UI active class, and calls `renderPreview()`
 ---
+
+## 2026-01-11 - US-006
+- Implemented logo upload functionality for Pro users
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Logo stored as base64 data URL in `logoDataUrl` global variable
+  - Logo persisted in localStorage under `invoiceData.logo`
+  - `handleLogoUpload()` validates file type (PNG/JPG) and size (500KB max)
+  - `updateLogoPreview()` toggles between upload UI and preview UI with remove button
+  - `updateLogoUploadSection()` removes `.locked` class for Pro users (called from `checkProStatus()`)
+  - Pro gating pattern: section has `.locked` class by default, CSS shows PRO badge via `::after`
+  - Section click handler `handleLogoSectionClick()` opens Pro modal for free users
+  - Logo restoration in `loadSavedData()` only happens if `isPro` is true
+---
