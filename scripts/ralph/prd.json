@@ -1,0 +1,155 @@
+{
+  "project": "InvoiceFlow",
+  "branchName": "ralph/pro-features-stripe",
+  "description": "Implement Stripe payments and Pro features (templates, logo upload, custom colors, watermark removal)",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Integrate Stripe Payment Links",
+      "description": "As a user, I want to purchase Pro via Stripe so I can unlock premium features.",
+      "acceptanceCriteria": [
+        "Update checkout() function to redirect to Stripe Payment Link URL (use placeholder URL for now: https://buy.stripe.com/PLACEHOLDER)",
+        "Add configuration object at top of script for easy Stripe link updates",
+        "Handle ?pro=success URL parameter on page load to activate Pro",
+        "Handle ?pro=cancel URL parameter to show 'Payment cancelled' message",
+        "Store Pro status in localStorage as invoiceflow_pro=true",
+        "Update UI to show 'Pro ✓' badge in header when Pro is active",
+        "Typecheck passes (N/A - vanilla JS, but verify no console errors)"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": "Stripe Payment Links are created in Stripe Dashboard, not in code. Just need the redirect logic."
+    },
+    {
+      "id": "US-002",
+      "title": "Implement watermark removal for Pro users",
+      "description": "As a Pro user, I want my invoices to not show the 'Created with InvoiceFlow' watermark.",
+      "acceptanceCriteria": [
+        "PDF export excludes watermark when isPro is true",
+        "Preview panel hides watermark section when isPro is true",
+        "Watermark appears for free users in both preview and PDF",
+        "Verify in browser"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": "Check if this is already implemented - may just need verification and bug fixes."
+    },
+    {
+      "id": "US-003",
+      "title": "Implement Modern Dark template",
+      "description": "As a Pro user, I want to use the Modern Dark invoice template for a sleek professional look.",
+      "acceptanceCriteria": [
+        "Create Modern Dark template styles with dark header/accent areas",
+        "Template uses dark gray (#1f2937) header with white text",
+        "Line items table has alternating row colors",
+        "Template applies to both preview and PDF export",
+        "Template selector shows Modern Dark as selectable for Pro users",
+        "Free users see lock icon and Pro badge on Modern Dark option",
+        "Verify in browser"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": "Focus on distinctive visual style that looks premium."
+    },
+    {
+      "id": "US-004",
+      "title": "Implement Minimal template",
+      "description": "As a Pro user, I want to use the Minimal invoice template for a clean, simple look.",
+      "acceptanceCriteria": [
+        "Create Minimal template with reduced visual elements",
+        "Uses thin lines instead of colored backgrounds",
+        "More whitespace, lighter typography",
+        "Template applies to both preview and PDF export",
+        "Template selector shows Minimal as selectable for Pro users",
+        "Free users see lock icon and Pro badge on Minimal option",
+        "Verify in browser"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": "Minimal should feel elegant and understated."
+    },
+    {
+      "id": "US-005",
+      "title": "Make template selector functional",
+      "description": "As a Pro user, I want to click on premium templates and have them apply to my invoice.",
+      "acceptanceCriteria": [
+        "Clicking a template option selects it (visual active state)",
+        "Selected template is stored in localStorage with invoice data",
+        "Template selection persists on page reload",
+        "Pro users can select any template",
+        "Free users clicking locked templates see Pro modal",
+        "Preview updates immediately when template changes",
+        "Verify in browser"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": "Wire up the template selector that already exists in UI."
+    },
+    {
+      "id": "US-006",
+      "title": "Add logo upload functionality",
+      "description": "As a Pro user, I want to upload my business logo to appear on invoices.",
+      "acceptanceCriteria": [
+        "Add file input for logo upload (accept image/png, image/jpeg)",
+        "Logo preview shows in the form after upload",
+        "Logo stored as base64 data URL in localStorage",
+        "Remove logo button clears the uploaded logo",
+        "Max file size validation (500KB) with error message",
+        "Logo upload section only enabled for Pro users",
+        "Free users see lock icon on logo upload area",
+        "Verify in browser"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": "Store as base64 to keep serverless. Size limit prevents localStorage bloat."
+    },
+    {
+      "id": "US-007",
+      "title": "Display logo in preview and PDF",
+      "description": "As a Pro user, I want my uploaded logo to appear on the invoice preview and PDF.",
+      "acceptanceCriteria": [
+        "Logo displays in invoice preview header area (max 150px width)",
+        "Logo displays in PDF export at appropriate size",
+        "Logo positioned in top-left of invoice, before/beside business name",
+        "If no logo uploaded, layout remains clean (no empty space)",
+        "Logo maintains aspect ratio",
+        "Verify in browser"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": "jsPDF supports addImage() for base64 images."
+    },
+    {
+      "id": "US-008",
+      "title": "Add custom accent color picker",
+      "description": "As a Pro user, I want to choose a custom accent color for my invoices.",
+      "acceptanceCriteria": [
+        "Add color picker input in form (type=color)",
+        "Default color is current primary (#6366f1)",
+        "Color selection stored in localStorage with invoice data",
+        "Color picker only enabled for Pro users",
+        "Free users see lock icon on color picker",
+        "Include 5-6 preset color swatches for quick selection",
+        "Verify in browser"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": "Native color picker works well, preset swatches add convenience."
+    },
+    {
+      "id": "US-009",
+      "title": "Apply custom color to preview and PDF",
+      "description": "As a Pro user, I want my custom accent color to appear on the invoice.",
+      "acceptanceCriteria": [
+        "Custom color applies to invoice preview (headers, totals, accents)",
+        "Custom color applies to PDF export",
+        "Color works with all three templates (Classic, Modern Dark, Minimal)",
+        "Preview updates immediately when color changes",
+        "Verify in browser"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": "Update CSS variables dynamically for preview, pass color to PDF generation."
+    }
+  ]
+}

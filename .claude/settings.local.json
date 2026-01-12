@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(powershell -command \"\\(Get-Item ''C:\\\\repos\\\\NewStartup\\\\invoice-generator.html''\\).Length\")",
+      "Bash(del \"C:\\\\repos\\\\NewStartup\\\\invoice-generator.html\")"
+    ]
+  }
+}

@@ -1,0 +1,9 @@
+# Ralph Progress Log
+Started: Initial setup
+---
+
+## Codebase Patterns
+- Ralph runs Claude Code in autonomous mode with `--dangerously-skip-permissions`
+- Each iteration reads prd.json, picks the next incomplete story, implements it, and commits
+- Progress is tracked via git commits, prd.json updates, and this file
+---
