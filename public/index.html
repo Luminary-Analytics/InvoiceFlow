@@ -1028,6 +1028,102 @@
             color: var(--primary-light);
         }
 
+        /* Minimal Template */
+        .invoice-preview.template-minimal {
+            background: var(--gray-50);
+            padding: 2rem;
+        }
+
+        .invoice-preview.template-minimal .invoice-header {
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .invoice-preview.template-minimal .invoice-title {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--gray-700);
+            letter-spacing: 0.1em;
+        }
+
+        .invoice-preview.template-minimal .invoice-number {
+            color: var(--gray-400);
+            font-weight: 300;
+        }
+
+        .invoice-preview.template-minimal .invoice-dates p {
+            font-weight: 300;
+            color: var(--gray-500);
+        }
+
+        .invoice-preview.template-minimal .party h3 {
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .invoice-preview.template-minimal .party-name {
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .invoice-preview.template-minimal .party-details {
+            color: var(--gray-500);
+            font-weight: 300;
+        }
+
+        .invoice-preview.template-minimal .invoice-table th {
+            background: transparent;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-400);
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: 0;
+        }
+
+        .invoice-preview.template-minimal .invoice-table td {
+            border-bottom: 1px solid var(--gray-100);
+            color: var(--gray-600);
+            font-weight: 300;
+        }
+
+        .invoice-preview.template-minimal .invoice-table td:last-child {
+            font-weight: 400;
+        }
+
+        .invoice-preview.template-minimal .totals-table .row {
+            color: var(--gray-500);
+            font-weight: 300;
+        }
+
+        .invoice-preview.template-minimal .totals-table .row.total {
+            border-top: 1px solid var(--gray-200);
+            font-weight: 500;
+        }
+
+        .invoice-preview.template-minimal .totals-table .row.total .amount {
+            color: var(--gray-700);
+        }
+
+        .invoice-preview.template-minimal .invoice-notes {
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .invoice-preview.template-minimal .invoice-notes h4 {
+            color: var(--gray-400);
+            font-weight: 400;
+        }
+
+        .invoice-preview.template-minimal .invoice-notes p {
+            color: var(--gray-500);
+            font-weight: 300;
+        }
+
+        .invoice-preview.template-minimal .invoice-footer {
+            border-top: 1px solid var(--gray-100);
+            color: var(--gray-400);
+        }
+
         /* Print */
         @media print {
             .header, .hero, .form-panel, .preview-header, .features-section, .site-footer, .modal-overlay {
@@ -1693,10 +1789,11 @@
 
             // Color schemes for different templates
             const isModernDark = currentTemplate === 'modern';
+            const isMinimal = currentTemplate === 'minimal';
             const primary = [99, 102, 241];
             const primaryLight = [129, 140, 248];
 
-            // Modern Dark uses inverted colors
+            // Template-specific colors
             let dark, medium, light, bgColor, headerBg, tableHeaderBg, tableRowAltBg, dividerColor;
             if (isModernDark) {
                 // Dark theme colors
@@ -1708,6 +1805,16 @@
                 tableHeaderBg = [55, 65, 81];   // gray-700 table header
                 tableRowAltBg = [41, 51, 65];   // Slightly lighter for alternating rows
                 dividerColor = [75, 85, 99];    // gray-600 dividers
+            } else if (isMinimal) {
+                // Minimal theme colors - subtle grays, thin lines
+                dark = [55, 65, 81];            // gray-700 for main text
+                medium = [107, 114, 128];       // gray-500 for secondary text
+                light = [156, 163, 175];        // gray-400 for labels
+                bgColor = [249, 250, 251];      // gray-50 background
+                headerBg = [249, 250, 251];     // gray-50 header
+                tableHeaderBg = [249, 250, 251];// Transparent-like (no fill)
+                tableRowAltBg = [249, 250, 251];
+                dividerColor = [229, 231, 235]; // gray-200 thin dividers
             } else {
                 // Classic light theme colors
                 dark = [31, 41, 55];
@@ -1733,14 +1840,14 @@
             }
 
             // Title
-            doc.setFontSize(28);
-            doc.setTextColor(...(isModernDark ? dark : primary));
-            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(isMinimal ? 22 : 28);
+            doc.setTextColor(...(isModernDark ? dark : (isMinimal ? dark : primary)));
+            doc.setFont('helvetica', isMinimal ? 'normal' : 'bold');
             doc.text('INVOICE', margin, y);
 
             y += 8;
             doc.setFontSize(11);
-            doc.setTextColor(...(isModernDark ? light : medium));
+            doc.setTextColor(...(isModernDark ? light : (isMinimal ? light : medium)));
             doc.setFont('helvetica', 'normal');
             doc.text(document.getElementById('invoiceNumber').value || 'INV-001', margin, y);
 
@@ -1790,15 +1897,21 @@
 
             // Table
             y = Math.max(y, toY) + 15;
-            doc.setFillColor(...tableHeaderBg);
-            doc.rect(margin, y - 4, pageWidth - margin * 2, 8, 'F');
+            // Minimal uses thin line, others use filled background
+            if (isMinimal) {
+                doc.setDrawColor(...dividerColor);
+                doc.line(margin, y + 4, pageWidth - margin, y + 4);
+            } else {
+                doc.setFillColor(...tableHeaderBg);
+                doc.rect(margin, y - 4, pageWidth - margin * 2, 8, 'F');
+            }
             doc.setFontSize(8);
-            doc.setTextColor(...(isModernDark ? medium : medium));
-            doc.setFont('helvetica', 'bold');
-            doc.text('DESCRIPTION', margin + 2, y);
-            doc.text('QTY', margin + 95, y);
-            doc.text('RATE', margin + 115, y);
-            doc.text('AMOUNT', pageWidth - margin - 2, y, { align: 'right' });
+            doc.setTextColor(...(isMinimal ? light : (isModernDark ? medium : medium)));
+            doc.setFont('helvetica', isMinimal ? 'normal' : 'bold');
+            doc.text(isMinimal ? 'Description' : 'DESCRIPTION', margin + 2, y);
+            doc.text(isMinimal ? 'Qty' : 'QTY', margin + 95, y);
+            doc.text(isMinimal ? 'Rate' : 'RATE', margin + 115, y);
+            doc.text(isMinimal ? 'Amount' : 'AMOUNT', pageWidth - margin - 2, y, { align: 'right' });
 
             y += 8;
             doc.setFont('helvetica', 'normal');
@@ -1852,10 +1965,10 @@
             doc.line(totalsX - 5, y, pageWidth - margin, y);
             y += 8;
             doc.setFontSize(12);
-            doc.setFont('helvetica', 'bold');
+            doc.setFont('helvetica', isMinimal ? 'normal' : 'bold');
             doc.setTextColor(...dark);
             doc.text('Total', totalsX, y);
-            doc.setTextColor(...(isModernDark ? primaryLight : primary));
+            doc.setTextColor(...(isModernDark ? primaryLight : (isMinimal ? dark : primary)));
             doc.text(`${currency}${getTotal().toFixed(2)}`, pageWidth - margin - 2, y, { align: 'right' });
 
             // Notes
