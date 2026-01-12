@@ -6,4 +6,19 @@ Started: Initial setup
 - Ralph runs Claude Code in autonomous mode with `--dangerously-skip-permissions`
 - Each iteration reads prd.json, picks the next incomplete story, implements it, and commits
 - Progress is tracked via git commits, prd.json updates, and this file
+- This is a vanilla JS single-page app in public/index.html - no build system, no tests
+- The `isPro` variable controls Pro features; stored in localStorage as `invoiceflow_pro`
+- STRIPE_CONFIG at top of script holds payment link URLs for easy updates
+- Use `new Function(code)` to check JavaScript syntax since there's no build/typecheck
+---
+
+## 2026-01-11 - US-001
+- Implemented Stripe Payment Links integration
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - All code is in a single index.html file with inline JavaScript
+  - The `isPro` global variable tracks Pro status, set from `localStorage.getItem('invoiceflow_pro')`
+  - `checkProStatus()` updates the UI badge in header when Pro is active
+  - URL parameters are handled at page load in `handleProUrlParams()`
+  - The `checkout()` function redirects to Stripe Payment Links, no need for Stripe SDK
 ---

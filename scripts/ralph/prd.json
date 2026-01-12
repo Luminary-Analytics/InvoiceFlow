@@ -17,7 +17,7 @@
         "Typecheck passes (N/A - vanilla JS, but verify no console errors)"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": "Stripe Payment Links are created in Stripe Dashboard, not in code. Just need the redirect logic."
     },
     {
