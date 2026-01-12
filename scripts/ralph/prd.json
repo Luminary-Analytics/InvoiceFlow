@@ -48,7 +48,7 @@
         "Verify in browser"
       ],
       "priority": 3,
-      "passes": false,
+      "passes": true,
       "notes": "Focus on distinctive visual style that looks premium."
     },
     {

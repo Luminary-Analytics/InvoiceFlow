@@ -10,6 +10,7 @@ Started: Initial setup
 - The `isPro` variable controls Pro features; stored in localStorage as `invoiceflow_pro`
 - STRIPE_CONFIG at top of script holds payment link URLs for easy updates
 - Use `new Function(code)` to check JavaScript syntax since there's no build/typecheck
+- Template system: `currentTemplate` state tracks selection, CSS uses `.invoice-preview.template-{name}`, PDF uses conditionals
 ---
 
 ## 2026-01-11 - US-001
@@ -31,4 +32,18 @@ Started: Initial setup
   - PDF watermark logic is in `downloadPDF()` function (line ~1713): `if (!isPro)` check before adding watermark
   - Both conditionally hide watermark based on global `isPro` variable
   - No code changes needed - the watermark removal feature was implemented alongside US-001
+---
+
+## 2026-01-11 - US-003
+- Implemented Modern Dark template for Pro users
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Added `currentTemplate` state variable to track selected template
+  - Template CSS classes follow pattern `.invoice-preview.template-{name}` (e.g., `.template-modern-dark`)
+  - Preview applies template by adding class to `#invoicePreview` element in `renderPreview()`
+  - PDF uses `isModernDark = currentTemplate === 'modern'` to switch color schemes
+  - PDF for dark templates: fill entire page with background, use inverted color palette
+  - `updateTemplateSelector()` removes `.pro` class from template options when user is Pro
+  - `selectTemplate()` gates Pro templates with isPro check before allowing selection
+  - Free users see PRO badge via CSS `.template-option.pro::after` pseudo-element
 ---
