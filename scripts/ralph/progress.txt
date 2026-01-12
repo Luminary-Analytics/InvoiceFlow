@@ -84,3 +84,17 @@ Started: Initial setup
   - Section click handler `handleLogoSectionClick()` opens Pro modal for free users
   - Logo restoration in `loadSavedData()` only happens if `isPro` is true
 ---
+
+## 2026-01-11 - US-007
+- Implemented logo display in preview and PDF export
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Preview logo: Added `.invoice-header-left` flex container with `.invoice-logo` inside `renderPreview()`
+  - Preview logo uses CSS: `max-width: 150px`, `max-height: 60px`, `object-fit: contain`
+  - PDF logo: Uses jsPDF `addImage()` with base64 data URL in `downloadPDF()`
+  - PDF logo sizing: max 35mm width, 15mm height, maintains aspect ratio via calculation
+  - PDF image format detection: checks if data URL contains 'image/png' else uses 'JPEG'
+  - Logo positioning in PDF shifts title via `titleStartX` variable
+  - Must await image load before getting dimensions in PDF (uses `new Image()` and Promise)
+  - Logo only shown if `logoDataUrl && isPro` - gated by Pro status
+---

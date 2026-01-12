@@ -116,7 +116,7 @@
         "Verify in browser"
       ],
       "priority": 7,
-      "passes": false,
+      "passes": true,
       "notes": "jsPDF supports addImage() for base64 images."
     },
     {
