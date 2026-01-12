@@ -939,6 +939,95 @@
             }
         }
 
+        /* Modern Dark Template */
+        .invoice-preview.template-modern-dark {
+            background: var(--gray-800);
+            color: white;
+        }
+
+        .invoice-preview.template-modern-dark .invoice-header {
+            background: var(--gray-800);
+            padding: 1.5rem;
+            margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-title {
+            color: white;
+        }
+
+        .invoice-preview.template-modern-dark .invoice-number {
+            color: var(--gray-400);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-dates p {
+            color: var(--gray-300);
+        }
+
+        .invoice-preview.template-modern-dark .party h3 {
+            color: var(--gray-500);
+        }
+
+        .invoice-preview.template-modern-dark .party-name {
+            color: white;
+        }
+
+        .invoice-preview.template-modern-dark .party-details {
+            color: var(--gray-400);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-table th {
+            background: var(--gray-700);
+            color: var(--gray-300);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-table td {
+            border-bottom-color: var(--gray-700);
+            color: var(--gray-300);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-table tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-table tr:nth-child(odd) td {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .invoice-preview.template-modern-dark .totals-table .row {
+            color: var(--gray-300);
+        }
+
+        .invoice-preview.template-modern-dark .totals-table .row.total {
+            border-top-color: var(--gray-600);
+            color: white;
+        }
+
+        .invoice-preview.template-modern-dark .totals-table .row.total .amount {
+            color: var(--primary-light);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-notes {
+            border-top-color: var(--gray-700);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-notes h4 {
+            color: var(--gray-500);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-notes p {
+            color: var(--gray-400);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-footer {
+            border-top-color: var(--gray-700);
+            color: var(--gray-500);
+        }
+
+        .invoice-preview.template-modern-dark .invoice-footer a {
+            color: var(--primary-light);
+        }
+
         /* Print */
         @media print {
             .header, .hero, .form-panel, .preview-header, .features-section, .site-footer, .modal-overlay {
@@ -1007,16 +1096,16 @@
             <!-- Template Selection -->
             <div class="section">
                 <h2 class="section-title">Choose Template</h2>
-                <div class="template-selector">
+                <div class="template-selector" id="templateSelector">
                     <div class="template-option active" onclick="selectTemplate('classic')" data-template="classic">
                         <div class="template-preview" style="background: linear-gradient(135deg, #6366f1 0%, #6366f1 30%, #f3f4f6 30%);"></div>
                         <div class="template-name">Classic</div>
                     </div>
-                    <div class="template-option pro" onclick="openProModal()" data-template="modern">
+                    <div class="template-option pro" onclick="selectTemplate('modern')" data-template="modern">
                         <div class="template-preview" style="background: linear-gradient(180deg, #1f2937 0%, #1f2937 40%, #f3f4f6 40%);"></div>
                         <div class="template-name">Modern Dark</div>
                     </div>
-                    <div class="template-option pro" onclick="openProModal()" data-template="minimal">
+                    <div class="template-option pro" onclick="selectTemplate('minimal')" data-template="minimal">
                         <div class="template-preview" style="background: linear-gradient(90deg, #22c55e 0%, #22c55e 8%, #f9fafb 8%);"></div>
                         <div class="template-name">Minimal</div>
                     </div>
@@ -1246,6 +1335,7 @@
         let saveTimeout = null;
         let currentPricing = 'monthly';
         let isPro = false;
+        let currentTemplate = 'classic';
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1285,7 +1375,19 @@
             if (isPro) {
                 document.querySelector('.btn-upgrade').textContent = 'Pro ✓';
                 document.querySelector('.btn-upgrade').style.background = 'var(--green-500)';
+                // Unlock Pro templates for Pro users
+                updateTemplateSelector();
             }
+        }
+
+        // Update template selector UI based on Pro status
+        function updateTemplateSelector() {
+            const proTemplates = document.querySelectorAll('.template-option.pro');
+            proTemplates.forEach(template => {
+                if (isPro) {
+                    template.classList.remove('pro');
+                }
+            });
         }
 
         function openProModal() {
@@ -1331,6 +1433,14 @@
 
         // Template selection
         function selectTemplate(template) {
+            // Check if this is a Pro-only template
+            const isProTemplate = template === 'modern' || template === 'minimal';
+            if (isProTemplate && !isPro) {
+                openProModal();
+                return;
+            }
+
+            currentTemplate = template;
             document.querySelectorAll('.template-option').forEach(el => {
                 el.classList.remove('active');
             });
@@ -1439,7 +1549,16 @@
             const validItems = lineItems.filter(item => item.description || item.rate > 0);
             const watermark = isPro ? '' : '<div class="invoice-footer">Created with <a href="https://invoiceflow.app" target="_blank">InvoiceFlow</a> - Free Invoice Generator</div>';
 
-            document.getElementById('invoicePreview').innerHTML = `
+            // Apply template class
+            const previewEl = document.getElementById('invoicePreview');
+            previewEl.className = 'invoice-preview';
+            if (currentTemplate === 'modern') {
+                previewEl.classList.add('template-modern-dark');
+            } else if (currentTemplate === 'minimal') {
+                previewEl.classList.add('template-minimal');
+            }
+
+            previewEl.innerHTML = `
                 <div class="invoice-header">
                     <div>
                         <div class="invoice-title">INVOICE</div>
@@ -1568,29 +1687,66 @@
             const doc = new jsPDF('portrait', 'mm', 'a4');
             const currency = getCurrency();
             const pageWidth = doc.internal.pageSize.getWidth();
+            const pageHeight = doc.internal.pageSize.getHeight();
             const margin = 20;
             let y = 20;
 
+            // Color schemes for different templates
+            const isModernDark = currentTemplate === 'modern';
             const primary = [99, 102, 241];
-            const dark = [31, 41, 55];
-            const medium = [107, 114, 128];
-            const light = [156, 163, 175];
+            const primaryLight = [129, 140, 248];
+
+            // Modern Dark uses inverted colors
+            let dark, medium, light, bgColor, headerBg, tableHeaderBg, tableRowAltBg, dividerColor;
+            if (isModernDark) {
+                // Dark theme colors
+                dark = [255, 255, 255];         // White text for main content
+                medium = [209, 213, 219];       // gray-300 for secondary text
+                light = [156, 163, 175];        // gray-400 for labels
+                bgColor = [31, 41, 55];         // gray-800 background
+                headerBg = [31, 41, 55];        // gray-800 header
+                tableHeaderBg = [55, 65, 81];   // gray-700 table header
+                tableRowAltBg = [41, 51, 65];   // Slightly lighter for alternating rows
+                dividerColor = [75, 85, 99];    // gray-600 dividers
+            } else {
+                // Classic light theme colors
+                dark = [31, 41, 55];
+                medium = [107, 114, 128];
+                light = [156, 163, 175];
+                bgColor = [255, 255, 255];
+                headerBg = [255, 255, 255];
+                tableHeaderBg = [249, 250, 251];
+                tableRowAltBg = [249, 250, 251];
+                dividerColor = [243, 244, 246];
+            }
+
+            // Dark background for Modern Dark template
+            if (isModernDark) {
+                doc.setFillColor(...bgColor);
+                doc.rect(0, 0, pageWidth, pageHeight, 'F');
+
+                // Header area with accent line
+                doc.setFillColor(...headerBg);
+                doc.rect(0, 0, pageWidth, 35, 'F');
+                doc.setFillColor(...primary);
+                doc.rect(0, 35, pageWidth, 1.5, 'F');
+            }
 
             // Title
             doc.setFontSize(28);
-            doc.setTextColor(...primary);
+            doc.setTextColor(...(isModernDark ? dark : primary));
             doc.setFont('helvetica', 'bold');
             doc.text('INVOICE', margin, y);
 
             y += 8;
             doc.setFontSize(11);
-            doc.setTextColor(...medium);
+            doc.setTextColor(...(isModernDark ? light : medium));
             doc.setFont('helvetica', 'normal');
             doc.text(document.getElementById('invoiceNumber').value || 'INV-001', margin, y);
 
             // Dates
             doc.setFontSize(10);
-            doc.setTextColor(...dark);
+            doc.setTextColor(...(isModernDark ? medium : dark));
             doc.text(`Date: ${formatDate(document.getElementById('invoiceDate').value)}`, pageWidth - margin, 20, { align: 'right' });
             doc.text(`Due: ${formatDate(document.getElementById('dueDate').value)}`, pageWidth - margin, 26, { align: 'right' });
 
@@ -1634,10 +1790,10 @@
 
             // Table
             y = Math.max(y, toY) + 15;
-            doc.setFillColor(249, 250, 251);
+            doc.setFillColor(...tableHeaderBg);
             doc.rect(margin, y - 4, pageWidth - margin * 2, 8, 'F');
             doc.setFontSize(8);
-            doc.setTextColor(...medium);
+            doc.setTextColor(...(isModernDark ? medium : medium));
             doc.setFont('helvetica', 'bold');
             doc.text('DESCRIPTION', margin + 2, y);
             doc.text('QTY', margin + 95, y);
@@ -1647,7 +1803,15 @@
             y += 8;
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(10);
-            lineItems.filter(item => item.description || item.rate > 0).forEach(item => {
+            const validItems = lineItems.filter(item => item.description || item.rate > 0);
+            validItems.forEach((item, index) => {
+                // Alternating row backgrounds for Modern Dark
+                if (isModernDark) {
+                    const rowBg = index % 2 === 0 ? [38, 48, 62] : [45, 55, 70];
+                    doc.setFillColor(...rowBg);
+                    doc.rect(margin, y - 4, pageWidth - margin * 2, 8, 'F');
+                }
+
                 doc.setTextColor(...dark);
                 doc.text(item.description || 'Item', margin + 2, y);
                 doc.setTextColor(...medium);
@@ -1656,7 +1820,7 @@
                 doc.setTextColor(...dark);
                 doc.text(`${currency}${(item.quantity * item.rate).toFixed(2)}`, pageWidth - margin - 2, y, { align: 'right' });
                 y += 2;
-                doc.setDrawColor(243, 244, 246);
+                doc.setDrawColor(...dividerColor);
                 doc.line(margin, y, pageWidth - margin, y);
                 y += 6;
             });
@@ -1684,14 +1848,14 @@
                 doc.text(`-${currency}${getDiscount().toFixed(2)}`, pageWidth - margin - 2, y, { align: 'right' });
             }
             y += 4;
-            doc.setDrawColor(229, 231, 235);
+            doc.setDrawColor(...dividerColor);
             doc.line(totalsX - 5, y, pageWidth - margin, y);
             y += 8;
             doc.setFontSize(12);
             doc.setFont('helvetica', 'bold');
             doc.setTextColor(...dark);
             doc.text('Total', totalsX, y);
-            doc.setTextColor(...primary);
+            doc.setTextColor(...(isModernDark ? primaryLight : primary));
             doc.text(`${currency}${getTotal().toFixed(2)}`, pageWidth - margin - 2, y, { align: 'right' });
 
             // Notes
