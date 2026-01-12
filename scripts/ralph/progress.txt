@@ -59,3 +59,14 @@ Started: Initial setup
   - Preview template class logic already wired up from US-003 (`renderPreview()` line ~1654)
   - Pro template gating handled centrally in `selectTemplate()` via `isProTemplate` check
 ---
+
+## 2026-01-11 - US-005
+- Made template selector fully functional with persistence
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - CRITICAL: Initialization order matters - `checkProStatus()` must be called BEFORE `loadSavedData()`
+  - Template is stored in localStorage under `invoiceData.template` alongside other invoice fields
+  - `loadSavedData()` restores template selection and updates both `currentTemplate` state and UI `.active` class
+  - Pro template restoration checks `isPro` - if user lost Pro status, they're reset to classic template
+  - `selectTemplate()` handles: Pro gating, state update, UI active class, and calls `renderPreview()`
+---
