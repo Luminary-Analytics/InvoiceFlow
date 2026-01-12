@@ -133,7 +133,7 @@
         "Verify in browser"
       ],
       "priority": 8,
-      "passes": false,
+      "passes": true,
       "notes": "Native color picker works well, preset swatches add convenience."
     },
     {

@@ -98,3 +98,19 @@ Started: Initial setup
   - Must await image load before getting dimensions in PDF (uses `new Image()` and Promise)
   - Logo only shown if `logoDataUrl && isPro` - gated by Pro status
 ---
+
+## 2026-01-11 - US-008
+- Implemented custom accent color picker for Pro users
+- Files changed: public/index.html
+- **Learnings for future iterations:**
+  - Color state stored in `accentColor` global variable, defaults to '#6366f1' (primary)
+  - CSS for color picker section follows same `.locked` pattern as logo upload
+  - `updateColorPickerSection()` unlocks for Pro users (called from `checkProStatus()`)
+  - `handleColorSectionClick()` opens Pro modal for free users
+  - `selectAccentColor(color, event)` updates state, UI, and triggers `renderPreview()`
+  - 6 preset swatches: #6366f1 (indigo), #8b5cf6 (violet), #06b6d4 (cyan), #10b981 (emerald), #f59e0b (amber), #ef4444 (red)
+  - Native `<input type="color">` for custom colors beside swatches
+  - Active swatch shown via `.active` class with dark border
+  - Color persisted in localStorage under `invoiceData.accentColor`
+  - Note: Color is stored but not yet applied to preview/PDF - that's US-009
+---

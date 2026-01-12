@@ -1240,6 +1240,114 @@
             margin-top: 0.5rem;
         }
 
+        /* Color Picker */
+        .color-picker-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .color-picker-section.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .color-picker-section.locked::after {
+            content: 'PRO';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--gradient);
+            color: white;
+            font-size: 0.625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+        }
+
+        .color-picker-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--gray-600);
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+
+        .color-picker-row {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .color-swatches {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .color-swatch.active {
+            border-color: var(--gray-800);
+        }
+
+        .color-picker-section.locked .color-swatch {
+            cursor: not-allowed;
+        }
+
+        .color-picker-divider {
+            width: 1px;
+            height: 28px;
+            background: var(--gray-200);
+        }
+
+        .color-picker-custom {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .color-picker-custom input[type="color"] {
+            width: 28px;
+            height: 28px;
+            padding: 0;
+            border: 1px solid var(--gray-300);
+            border-radius: 6px;
+            cursor: pointer;
+            background: none;
+        }
+
+        .color-picker-custom input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 2px;
+        }
+
+        .color-picker-custom input[type="color"]::-webkit-color-swatch {
+            border-radius: 4px;
+            border: none;
+        }
+
+        .color-picker-custom span {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .color-picker-section.locked input[type="color"] {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
         /* Print */
         @media print {
             .header, .hero, .form-panel, .preview-header, .features-section, .site-footer, .modal-overlay {
@@ -1361,6 +1469,25 @@
                         </label>
                     </div>
                     <div id="logoError" class="logo-error" style="display: none;"></div>
+                </div>
+                <!-- Color Picker -->
+                <div class="color-picker-section locked" id="colorPickerSection" onclick="handleColorSectionClick(event)">
+                    <span class="color-picker-label">Accent Color</span>
+                    <div class="color-picker-row">
+                        <div class="color-swatches" id="colorSwatches">
+                            <div class="color-swatch active" style="background: #6366f1;" data-color="#6366f1" onclick="selectAccentColor('#6366f1', event)"></div>
+                            <div class="color-swatch" style="background: #8b5cf6;" data-color="#8b5cf6" onclick="selectAccentColor('#8b5cf6', event)"></div>
+                            <div class="color-swatch" style="background: #06b6d4;" data-color="#06b6d4" onclick="selectAccentColor('#06b6d4', event)"></div>
+                            <div class="color-swatch" style="background: #10b981;" data-color="#10b981" onclick="selectAccentColor('#10b981', event)"></div>
+                            <div class="color-swatch" style="background: #f59e0b;" data-color="#f59e0b" onclick="selectAccentColor('#f59e0b', event)"></div>
+                            <div class="color-swatch" style="background: #ef4444;" data-color="#ef4444" onclick="selectAccentColor('#ef4444', event)"></div>
+                        </div>
+                        <div class="color-picker-divider"></div>
+                        <div class="color-picker-custom">
+                            <input type="color" id="customColorPicker" value="#6366f1" onchange="selectAccentColor(this.value, event)" onclick="event.stopPropagation()">
+                            <span>Custom</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1608,6 +1735,8 @@
                 updateTemplateSelector();
                 // Unlock logo upload for Pro users
                 updateLogoUploadSection();
+                // Unlock color picker for Pro users
+                updateColorPickerSection();
             }
         }
 
@@ -1719,6 +1848,50 @@
             event.stopPropagation();
             logoDataUrl = null;
             updateLogoPreview();
+            renderPreview();
+        }
+
+        // Accent color state
+        let accentColor = '#6366f1';
+
+        // Update color picker section UI based on Pro status
+        function updateColorPickerSection() {
+            const section = document.getElementById('colorPickerSection');
+            if (isPro && section) {
+                section.classList.remove('locked');
+            }
+        }
+
+        // Handle click on color section (for Pro gating)
+        function handleColorSectionClick(event) {
+            if (!isPro) {
+                event.stopPropagation();
+                openProModal();
+            }
+        }
+
+        // Select an accent color
+        function selectAccentColor(color, event) {
+            if (event) event.stopPropagation();
+            if (!isPro) {
+                openProModal();
+                return;
+            }
+
+            accentColor = color;
+
+            // Update swatch active states
+            document.querySelectorAll('.color-swatch').forEach(swatch => {
+                swatch.classList.remove('active');
+                if (swatch.dataset.color === color) {
+                    swatch.classList.add('active');
+                }
+            });
+
+            // Update custom color picker
+            document.getElementById('customColorPicker').value = color;
+
+            // Trigger preview update
             renderPreview();
         }
 
@@ -1985,7 +2158,8 @@
                 notes: document.getElementById('notes').value,
                 lineItems,
                 template: currentTemplate,
-                logo: logoDataUrl
+                logo: logoDataUrl,
+                accentColor: accentColor
             }));
         }
 
@@ -2030,6 +2204,18 @@
                     if (data.logo && isPro) {
                         logoDataUrl = data.logo;
                         updateLogoPreview();
+                    }
+                    // Restore accent color (only if user is Pro)
+                    if (data.accentColor && isPro) {
+                        accentColor = data.accentColor;
+                        // Update UI
+                        document.querySelectorAll('.color-swatch').forEach(swatch => {
+                            swatch.classList.remove('active');
+                            if (swatch.dataset.color === accentColor) {
+                                swatch.classList.add('active');
+                            }
+                        });
+                        document.getElementById('customColorPicker').value = accentColor;
                     }
                 } catch (e) {}
             }
