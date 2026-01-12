@@ -1435,6 +1435,8 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            handleProUrlParams();
+            checkProStatus();
             loadSavedData();
             if (lineItems.length === 0) {
                 addLineItem();
@@ -1442,8 +1444,6 @@
             setDefaultDates();
             setupAutoSave();
             renderPreview();
-            handleProUrlParams();
-            checkProStatus();
         });
 
         // Handle ?pro=success and ?pro=cancel URL parameters
@@ -1741,7 +1741,8 @@
                 taxRate: document.getElementById('taxRate').value,
                 discountAmount: document.getElementById('discountAmount').value,
                 notes: document.getElementById('notes').value,
-                lineItems
+                lineItems,
+                template: currentTemplate
             }));
         }
 
@@ -1766,6 +1767,22 @@
                     document.getElementById('notes').value = data.notes || '';
                     lineItems = data.lineItems || [];
                     renderLineItems();
+                    // Restore template selection (only if user has access)
+                    if (data.template) {
+                        const isProTemplate = data.template === 'modern' || data.template === 'minimal';
+                        // Only restore Pro templates if user is Pro, otherwise default to classic
+                        if (!isProTemplate || isPro) {
+                            currentTemplate = data.template;
+                            // Update active state in template selector UI
+                            document.querySelectorAll('.template-option').forEach(el => {
+                                el.classList.remove('active');
+                            });
+                            const templateEl = document.querySelector(`[data-template="${data.template}"]`);
+                            if (templateEl) {
+                                templateEl.classList.add('active');
+                            }
+                        }
+                    }
                 } catch (e) {}
             }
         }
