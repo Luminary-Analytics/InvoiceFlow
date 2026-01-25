@@ -74,8 +74,11 @@ for i in $(seq 1 $MAX_ITERATIONS); do
 
   # Run Claude Code with the ralph prompt
   # Using --dangerously-skip-permissions to allow autonomous operation
-  # --print to output the response
-  OUTPUT=$(cd "$PROJECT_ROOT" && claude --dangerously-skip-permissions -p "$PROMPT" 2>&1 | tee /dev/stderr) || true
+  # Write output to temp file for Windows compatibility (no /dev/stderr)
+  TEMP_OUTPUT="$SCRIPT_DIR/.ralph-output-$i.tmp"
+  cd "$PROJECT_ROOT" && claude --dangerously-skip-permissions -p "$PROMPT" 2>&1 | tee "$TEMP_OUTPUT" || true
+  OUTPUT=$(cat "$TEMP_OUTPUT" 2>/dev/null || echo "")
+  rm -f "$TEMP_OUTPUT"
 
   # Check for completion signal
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then

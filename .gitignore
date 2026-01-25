@@ -1,0 +1,18 @@
+# Claude Code temp files
+tmpclaude-*
+
+# Claude settings (local)
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Env files (if added later)
+.env
+.env.local
