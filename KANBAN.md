@@ -8,20 +8,22 @@
 
 ## 📋 BACKLOG
 
-### Domain & Infrastructure
-- [x] Research available domain names (invoiceflow.io, .co, .app, etc.) → IN PROGRESS
-- [ ] Purchase domain
-- [ ] Configure DNS for Render
-- [ ] Update Stripe payment links with new domain
-- [ ] Set up SSL certificate
+### Domain & Infrastructure ✅ COMPLETE
+- [x] Research available domain names
+- [x] Purchase domain (getinvoiceflow.io)
+- [x] Configure GoDaddy DNS (www CNAME)
+- [x] Configure GoDaddy forwarding (root → www)
+- [x] Add custom domain to Render dashboard
+- [x] Update Stripe payment links with new domain
+- [x] SSL certificate (auto-issued by Render)
 
 ### SEO Foundation
-- [x] Add meta tags (title, description, keywords) → IN PROGRESS
-- [x] Add Open Graph tags for social sharing → IN PROGRESS
-- [ ] Create sitemap.xml
-- [ ] Add robots.txt
-- [ ] Add structured data (JSON-LD SoftwareApplication)
-- [ ] Submit to Google Search Console
+- [x] Add meta tags (title, description, keywords)
+- [x] Add Open Graph tags for social sharing
+- [x] Create sitemap.xml
+- [x] Add robots.txt
+- [x] Add structured data (JSON-LD SoftwareApplication)
+- [ ] **Submit to Google Search Console** ⭐ PRIORITY
 - [ ] Submit to Bing Webmaster Tools
 
 ### Content / Blog
@@ -57,7 +59,9 @@
 
 | Task | Assignee | Started | Notes |
 |------|----------|---------|-------|
-| | | | |
+| Google Search Console setup | Enki | 2026-02-02 | Submit sitemap, verify ownership |
+| First blog post | Enki | 2026-02-02 | "How to Create a Professional Invoice" |
+| Product Hunt prep | Enki | 2026-02-02 | Assets, copy, schedule |
 
 ---
 
@@ -82,6 +86,11 @@
 | Fix SEO meta tags | Enki | 2026-02-02 | Fixed URLs pointing to competitor |
 | Add robots.txt | Enki | 2026-02-02 | /robots.txt live |
 | Add sitemap.xml | Enki | 2026-02-02 | /sitemap.xml live |
+| Purchase domain | Rich | 2026-02-02 | getinvoiceflow.io (~$35/yr) |
+| Configure www CNAME | Rich | 2026-02-02 | www → invoiceflow-x6lf.onrender.com |
+| Update Stripe redirect URLs | Enki | 2026-02-02 | Both links → www.getinvoiceflow.io/?pro=success |
+| GoDaddy forwarding | Rich | 2026-02-02 | Root → www redirect |
+| Add custom domain to Render | Enki | 2026-02-02 | www.getinvoiceflow.io verified, SSL pending |
 
 ---
 
@@ -89,9 +98,7 @@
 
 | Task | Blocker | Owner to Resolve |
 |------|---------|------------------|
-| Purchase domain | Need Rich's decision on domain choice | Rich |
-| Configure DNS for Render | Waiting on domain purchase | Rich |
-| Update Stripe with final domain | Waiting on domain purchase | Rich |
+| *None* | — | — |
 
 ---
 
@@ -120,20 +127,28 @@
 - ✅ Fixed SEO meta tags (were pointing to competitor!)
 - ✅ Added robots.txt and sitemap.xml
 - ✅ Pushed to GitHub → Auto-deploying
+- ✅ Purchased domain: `getinvoiceflow.io` (GoDaddy ~$35/yr)
+- ✅ Added www CNAME record → Render
+- ✅ Updated Stripe payment links redirect → `https://www.getinvoiceflow.io/?pro=success`
 
-**Blockers:**
-- ⏳ **Need Rich's decision:** Which domain to purchase?
-  - Option 1: `getinvoiceflow.com` (recommended)
-  - Option 2: `invoiceflowpro.com`
-  - Option 3: `tryinvoiceflow.com`
+**Next Up:**
+- [x] Rich: Set up GoDaddy forwarding (root domain → www) ✅
+- [x] Enki: Add custom domain in Render dashboard ✅
+- [ ] Submit sitemap to Google Search Console
+- [ ] Begin content/blog creation for SEO
+- [ ] Prepare Product Hunt launch
 
-**Next Up (After Domain Decision):**
-- Purchase domain
-- Configure DNS
-- Update all URLs (meta tags, Stripe, etc.)
-- Submit to Google Search Console
-- Begin content/blog creation
+### 2026-02-02 (Afternoon)
+**Done:**
+- ✅ GoDaddy forwarding configured (Rich)
+- ✅ Custom domain added to Render (www.getinvoiceflow.io)
+- ✅ SSL certificate being issued
+
+**Now Working On:**
+1. 🔍 Google Search Console - get indexed ASAP
+2. ✍️ First blog post - SEO content
+3. 🚀 Product Hunt prep - launch assets
 
 ---
 
-*Last Updated: 2026-02-02 1:40 PM EST*
+*Last Updated: 2026-02-02 2:10 PM EST*
