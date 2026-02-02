@@ -1,0 +1,6 @@
+# InvoiceFlow Robots.txt
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://invoiceflow-x6lf.onrender.com/sitemap.xml
