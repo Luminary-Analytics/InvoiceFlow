@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://invoiceflow-x6lf.onrender.com/sitemap.xml
+Sitemap: https://getinvoiceflow.io/sitemap.xml
