@@ -57,8 +57,7 @@
 
 | Task | Assignee | Started | Notes |
 |------|----------|---------|-------|
-| Domain name research | Research-Agent | 2026-02-02 1:22 PM | Checking availability & pricing |
-| SEO meta tags implementation | SEO-Agent | 2026-02-02 1:23 PM | Adding meta, OG, Twitter tags |
+| | | | |
 
 ---
 
@@ -79,6 +78,10 @@
 | Create Stripe yearly product | Enki | 2026-02-02 | $72/year |
 | Create yearly payment link | Enki | 2026-02-02 | buy.stripe.com/fZucMXfPK8Gx... |
 | Update payment link redirects | Enki | 2026-02-02 | Both links → correct URL |
+| Domain name research | Enki | 2026-02-02 | See research/domain-research.md |
+| Fix SEO meta tags | Enki | 2026-02-02 | Fixed URLs pointing to competitor |
+| Add robots.txt | Enki | 2026-02-02 | /robots.txt live |
+| Add sitemap.xml | Enki | 2026-02-02 | /sitemap.xml live |
 
 ---
 
@@ -86,7 +89,9 @@
 
 | Task | Blocker | Owner to Resolve |
 |------|---------|------------------|
-| | | |
+| Purchase domain | Need Rich's decision on domain choice | Rich |
+| Configure DNS for Render | Waiting on domain purchase | Rich |
+| Update Stripe with final domain | Waiting on domain purchase | Rich |
 
 ---
 
@@ -106,24 +111,29 @@
 ## 🗓️ DAILY STANDUP LOG
 
 ### 2026-02-02 (Sprint Start)
-**Done:**
+**Done Today:**
 - ✅ Deployed app to Render
 - ✅ Set up Stripe payment links (monthly + yearly)
 - ✅ Created GitHub repo under Luminary-Analytics
-- ✅ Created project management structure (KANBAN.md, SPRINT-AGENTS.md)
-
-**In Progress:**
-- 🔄 **Research-Agent**: Domain name availability research
-- 🔄 **SEO-Agent**: Implementing meta tags, Open Graph, Twitter cards
+- ✅ Created project management structure
+- ✅ Domain research completed → Top pick: `getinvoiceflow.com`
+- ✅ Fixed SEO meta tags (were pointing to competitor!)
+- ✅ Added robots.txt and sitemap.xml
+- ✅ Pushed to GitHub → Auto-deploying
 
 **Blockers:**
-- ⏳ Domain purchase (waiting for research results + Rich approval)
+- ⏳ **Need Rich's decision:** Which domain to purchase?
+  - Option 1: `getinvoiceflow.com` (recommended)
+  - Option 2: `invoiceflowpro.com`
+  - Option 3: `tryinvoiceflow.com`
 
-**Next Up:**
-- Domain purchase decision
-- Push SEO changes to GitHub → auto-deploy
-- Begin content/blog planning
+**Next Up (After Domain Decision):**
+- Purchase domain
+- Configure DNS
+- Update all URLs (meta tags, Stripe, etc.)
+- Submit to Google Search Console
+- Begin content/blog creation
 
 ---
 
-*Last Updated: 2026-02-02 1:24 PM EST*
+*Last Updated: 2026-02-02 1:40 PM EST*
